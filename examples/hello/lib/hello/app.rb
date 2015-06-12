@@ -7,6 +7,10 @@ module Hello
         if env["REQUEST_METHOD"] == "GET"
           return [200, {}, actions.say_hello.call]
         end
+      elsif env["PATH_INFO"] == "/world"
+        if env["REQUEST_METHOD"] == "DELETE"
+          return [200, {}, actions.say_goodbye.call]
+        end
       end
 
       [404, {}, ""]

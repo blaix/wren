@@ -27,10 +27,21 @@ describe Hello::App do
   end
 
   describe "HTTP method not supported by a resource" do
-    let!(:response) { request.post("/hello") }
-
     it "404s" do
-      expect(response).to be_not_found
+      expect(request.post("/hello")).to be_not_found
+      expect(request.put("/world")).to be_not_found
+    end
+  end
+
+  describe "DELETE /world" do
+    let!(:response) { request.delete("/world") }
+
+    it "says goodbye to the world" do
+      expect(response.body).to eq("Goodbye, World!")
+    end
+
+    it "gives a successful response" do
+      expect(response).to be_ok
     end
   end
 end
