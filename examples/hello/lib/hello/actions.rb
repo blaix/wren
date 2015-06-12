@@ -9,4 +9,8 @@ class Actions
   def say_goodbye
     SayGoodbye.new
   end
+
+  def do_nothing
+    -> { "" }
+  end
 end

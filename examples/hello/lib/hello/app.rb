@@ -6,6 +6,8 @@ module Hello
       body = if env["PATH_INFO"] == "/hello"
         if env["REQUEST_METHOD"] == "GET"
           actions.say_hello.call
+        elsif env["REQUEST_METHOD"] == "HEAD"
+          actions.do_nothing.call
         end
       elsif env["PATH_INFO"] == "/world"
         if env["REQUEST_METHOD"] == "DELETE"

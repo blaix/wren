@@ -18,6 +18,14 @@ describe Hello::App do
     end
   end
 
+  describe "HEAD /hello" do
+    let!(:response) { request.head("/hello") }
+
+    it "gives a successful response" do
+      expect(response).to be_ok
+    end
+  end
+
   describe "GET to a non-existant path" do
     let!(:response) { request.get("/path/that/does/not/exist") }
 
