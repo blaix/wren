@@ -1,9 +1,15 @@
-require "hello/actions/say_hello"
+require "hello/actions"
 
 module Hello
   class App
     def call(env)
-      [200, {}, SayHello.new.call]
+      [200, {}, actions.say_hello.call]
+    end
+
+    private
+
+    def actions
+      @actions ||= Actions.new
     end
   end
 end
