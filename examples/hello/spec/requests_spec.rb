@@ -17,4 +17,12 @@ describe Hello::App do
       expect(response).to be_ok
     end
   end
+
+  describe "GET to a non-existant path" do
+    let!(:response) { request.get("/path/that/does/not/exist") }
+
+    it "404s" do
+      expect(response).to be_not_found
+    end
+  end
 end

@@ -3,7 +3,11 @@ require "hello/actions"
 module Hello
   class App
     def call(env)
-      [200, {}, actions.say_hello.call]
+      if env["PATH_INFO"] == "/hello"
+        [200, {}, actions.say_hello.call]
+      else
+        [404, {}, ""]
+      end
     end
 
     private
