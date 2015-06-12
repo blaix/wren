@@ -3,6 +3,8 @@ require "hello/actions"
 module Hello
   class App
     class Router
+      class NotFound < StandardError; end
+
       attr_reader :routes
 
       def initialize(routes)
@@ -11,6 +13,8 @@ module Hello
 
       def action_for(path, req_method)
         routes.fetch(path).fetch(req_method)
+      rescue KeyError
+        raise NotFound.new("Can't find route for #{req_method} #{path}")
       end
     end
 
@@ -35,7 +39,7 @@ module Hello
         action = actions.send(action_name)
         body = action.call
         status = 200
-      rescue KeyError
+      rescue Router::NotFound
         body = nil
         status = 404
       end
