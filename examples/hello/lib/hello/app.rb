@@ -7,8 +7,19 @@ module Hello
 
       attr_reader :routes
 
-      def initialize(routes)
-        @routes = routes
+      def initialize(&block)
+        @routes = {}
+        instance_eval(&block)
+      end
+
+      def resource(name, at:, &block)
+        @this_path = at
+        routes[@this_path] = {}
+        instance_eval(&block)
+      end
+
+      def on(req_method, call:)
+        routes[@this_path][req_method] = call
       end
 
       def action_for(path, req_method)
@@ -19,17 +30,16 @@ module Hello
     end
 
     def call(env)
-      routes = {
-        "/hello" => {
-          "GET" => "say_hello",
-          "HEAD" => "do_nothing"
-        },
-        "/world" => {
-          "DELETE" => "say_goodbye"
-        }
-      }
+      router = Router.new do
+        resource "hello", at: "/hello" do
+          on "GET", call: "say_hello"
+          on "HEAD", call: "do_nothing"
+        end
 
-      router = Router.new(routes)
+        resource "world", at: "/world" do
+          on "DELETE", call: "say_goodbye"
+        end
+      end
 
       path = env.fetch("PATH_INFO")
       req_method = env.fetch("REQUEST_METHOD")
