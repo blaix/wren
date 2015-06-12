@@ -25,4 +25,12 @@ describe Hello::App do
       expect(response).to be_not_found
     end
   end
+
+  describe "HTTP method not supported by a resource" do
+    let!(:response) { request.post("/hello") }
+
+    it "404s" do
+      expect(response).to be_not_found
+    end
+  end
 end

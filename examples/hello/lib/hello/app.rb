@@ -4,10 +4,12 @@ module Hello
   class App
     def call(env)
       if env["PATH_INFO"] == "/hello"
-        [200, {}, actions.say_hello.call]
-      else
-        [404, {}, ""]
+        if env["REQUEST_METHOD"] == "GET"
+          return [200, {}, actions.say_hello.call]
+        end
       end
+
+      [404, {}, ""]
     end
 
     private
