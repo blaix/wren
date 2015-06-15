@@ -5,25 +5,36 @@ module Hello
     class Router
       class NotFound < StandardError; end
 
-      attr_reader :routes
+      attr_reader :resources
+
+      class Resource
+        attr_reader :actions
+
+        def initialize(name, &block)
+          @actions = {}
+          instance_eval(&block)
+        end
+
+        def on(req_method, call:)
+          actions[req_method] = call
+        end
+
+        def action_for(req_method)
+          actions.fetch(req_method)
+        end
+      end
 
       def initialize(&block)
-        @routes = {}
+        @resources = {}
         instance_eval(&block)
       end
 
       def resource(name, at:, &block)
-        @this_path = at
-        routes[@this_path] = {}
-        instance_eval(&block)
-      end
-
-      def on(req_method, call:)
-        routes[@this_path][req_method] = call
+        resources[at] = Resource.new(name, &block)
       end
 
       def action_for(path, req_method)
-        routes.fetch(path).fetch(req_method)
+        resources.fetch(path).action_for(req_method)
       rescue KeyError
         raise NotFound.new("Can't find route for #{req_method} #{path}")
       end
