@@ -7,7 +7,7 @@ module Hello
   class App < Wren::App
     def initialize
       @router = Hello::Router.new
-      @actions = Actions.new
+      @actions = Hello::Actions.new
     end
   end
 end
